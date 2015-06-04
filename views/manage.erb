@@ -1,0 +1,29 @@
+<!doctype html>
+
+<html>
+  
+  <head>
+    <title>Manage</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  </head>
+  
+  <body>
+    <div style="width:300px; position: absolute; top:50%; left: 50%; transform: translateX(-50%) translateY(-50%);" class="container">
+      <form action="manage/add" method="POST">
+        <label class="form-label">Path</label>
+        <input name="path" style="width:100%" type="text" class="form-control">
+        <label class="form-label">Name</label>
+        <input name="name" style="width:100%" type="text" class="form-control">
+        <label class="form-label">Key</label>
+        <input name="key" style="width:100%" type="text" class="form-control">
+        <br>
+        <input type="submit" value="Submit">
+        <!--<a style="width:100%" class="btn btn-primary">Do it!</a>-->
+      </form>
+    </div>
+  </body>
+
+</html>
