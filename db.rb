@@ -1,6 +1,11 @@
 class DB
     def initialize()
-        @data = YAML::load_file("./db.yaml")
+        if (File.exist?("./db.yaml"))
+            @data = YAML::load_file("./db.yaml")
+        else 
+            @data = {}
+        end
+
     end
 
     def add(key, value)
