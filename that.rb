@@ -2,6 +2,7 @@
 
 require 'sinatra'
 require 'yaml'
+require 'filesize'
 require_relative 'db'
 
 db = DB.new
@@ -15,7 +16,9 @@ get '/manage' do
 end
 
 post '/manage/add' do
-    db.add(params["key"], Record.new(params["key"], params["name"], params["path"], ""))
+    size = File.size(params["path"])
+    size = Filesize.from("#{size} B").pretty
+    db.add(params["key"], Record.new(params["key"], params["name"], params["path"], size))
 end
 
 get '/download/:key' do |n|
