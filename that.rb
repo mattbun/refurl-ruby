@@ -3,9 +3,11 @@
 require 'sinatra'
 require 'yaml'
 require 'filesize'
+require 'json'
 require_relative 'db'
 
 db = DB.new
+rootpath = "/media"
 
 #get '/' do
 #    erb :index
@@ -16,9 +18,10 @@ get '/manage' do
 end
 
 post '/manage/add' do
-    size = File.size(params["path"])
+    fullpath = rootpath + params["path"]
+    size = File.size(fullpath)
     size = Filesize.from("#{size} B").pretty
-    db.add(params["key"], Record.new(params["key"], params["name"], params["path"], size))
+    db.add(params["key"], Record.new(params["key"], params["name"], fullpath, size))
 end
 
 get '/download/:key' do |n|
@@ -26,6 +29,38 @@ get '/download/:key' do |n|
     filename = File.basename(record.path)
     send_file record.path, :filename => filename, :type => 'Application/octet-stream'
 end
+
+
+get '/api/ls' do
+    path = params['path']
+    fullpath = rootpath
+    if (path != nil)
+        fullpath += path
+    end
+
+    isDir = File.directory?(fullpath)
+    answer = {:success => true, :isdir => isDir, :path => path}
+
+    if (isDir)
+        answer[:listing] = Dir.entries(fullpath).sort
+    end
+
+    return JSON.generate(answer)
+end
+
+
+get '/list' do
+    path = params['path']
+    fullpath = rootpath
+    if (path != nil)
+        fullpath += "/" + path
+    else 
+        path = ""
+    end
+
+    @path = path
+    erb :list
+end   
 
 get '/:key' do |n|
     record = db.get(n)

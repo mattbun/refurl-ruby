@@ -8,13 +8,59 @@
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+        
+        var currentpath = "<%= @path %>";
+
+        $(populateList(null));
+
+        function listpath(path) {
+            alert(path);
+            return false;
+        }
+
+        function populateList(path) {
+            apiAddr = '/api/ls';
+            if (path != null){
+                currentpath += "/" + path;
+                apiAddr += "?path=" + currentpath;
+            }
+
+            $("#currentpath").val(currentpath);
+                
+            $.getJSON(apiAddr, function(data) {
+                var filelist = $("#filelist");
+                filelist.empty();
+
+                if (data.isdir){
+                    $.each(data.listing, function(index, value){
+                        filelist.append('<a href="#" onclick="return populateList(\'' + value + '\');"><li class="list-group-item">' + value + '</li></a>');
+                    });
+                }
+                else {
+                    console.log("hello");
+                    $("#filelist-container").remove();
+                }
+            });
+
+
+
+            return false;
+        }
+
+    </script>
   </head>
   
   <body>
     <div style="width:300px; position: absolute; top:50%; left: 50%; transform: translateX(-50%) translateY(-50%);" class="container">
       <form action="manage/add" method="POST">
         <label class="form-label">Path</label>
-        <input name="path" style="width:100%" type="text" class="form-control">
+        <input id="currentpath" name="path" style="width:100%" type="text" class="form-control">
+        <div id="filelist-container" class="container" style="overflow:auto; width:100%; height:500px">
+            <ul id="filelist" class="list-group">
+            </ul>
+        </div>
+        <br>
         <label class="form-label">Name</label>
         <input name="name" style="width:100%" type="text" class="form-control">
         <label class="form-label">Key</label>
