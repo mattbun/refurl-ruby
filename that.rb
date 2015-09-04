@@ -24,7 +24,7 @@ post '/manage/add' do
     db.add(params["key"], Record.new(params["key"], params["name"], fullpath, size))
 end
 
-get '/download/:key' do |n|
+get '/:key/download' do |n|
     record = db.get(n)
     filename = File.basename(record.path)
     send_file record.path, :filename => filename, :type => 'Application/octet-stream'
@@ -71,5 +71,41 @@ get '/:key' do |n|
     @key = n
     @name = record.name
     @size = record.size
+    @path = record.path
     erb :download
 end
+
+post '/jqueryfiletree-connector' do
+    dir = params["dir"].to_s
+
+    #TODO Check that dir is in our root
+    #
+
+    fullpath = rootpath
+    if (dir != nil)
+        fullpath += dir
+    end
+
+    filelist = []
+    if (File.directory?(fullpath))
+        filelist = Dir.entries(fullpath).sort
+    end
+    
+    response = "<ul class=\"jqueryFileTree\" style=\"display: none;\">"
+
+    filelist.each{
+        |item|
+        next if (item == "." || item == "..")
+
+        if (File.directory?(fullpath + "/" + item))
+            response += "<li class=\"directory collapsed\"><a href=\"#\" rel=\"#{dir + item}/\">#{item}</a></li>";
+        else
+            ext = File.extname(item)[1..-1]
+            response += "<li class=\"file ext_#{ext}\"><a href=\"#\" rel=\"#{dir + item}\">#{item}</a></li>"
+        end
+    }
+
+    response += "</ul>"
+    return response
+end
+        
