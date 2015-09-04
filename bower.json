@@ -1,0 +1,22 @@
+{
+  "name": "that",
+  "version": "0.1",
+  "homepage": "https://github.com/qiquen/that",
+  "authors": [
+    "Matt Rathbun <qiquen@users.noreply.github.com>"
+  ],
+  "main": "that.rb",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "jqueryfiletree": "~2.0.2"
+  }
+}
