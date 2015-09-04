@@ -18,7 +18,7 @@
                 },
                 function(file){
                     console.log(file);
-                    $("path-field").val(file);
+                    $("#path-field").val(file);
                 });
             });
 
@@ -57,11 +57,11 @@
               </div>
               <div style="float:right; width:350px">
                   <label class="form-label"><h4>Name</h4></label>
-                  <input type="text" class="form-control">
+                  <input type="text" class="form-control" name="name">
                   <br>
                   <label class="form-label"><h4>Key</h4></label>
                   <div class="input-group">
-                      <input type="text" class="form-control">
+                      <input type="text" class="form-control" name="key">
                       <div class="input-group-btn">
                           <button type="button" class="btn btn-primary">
                               <span class="glyphicon glyphicon-refresh"></span>
@@ -70,7 +70,7 @@
                   </div>
                   <br>
                   <br>
-                  <button type="button" class="btn btn-lg btn-block btn-primary">Create Link</button>
+                  <input type="submit" class="btn btn-lg btn-block btn-primary" value="Create Link">
               </div>
           </form>
       </div>
