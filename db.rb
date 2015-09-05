@@ -30,7 +30,8 @@ class DB
     end
 
     def delete(key)
-        return @data.delete(key)
+        @data.delete(key)
+        saveDB();
     end
 
     def print()
