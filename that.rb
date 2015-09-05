@@ -13,7 +13,24 @@ rootpath = "/media"
 #    erb :index
 #end
 
+def getAHash(db)
+    # bubblebabble makes for some fun looking hashes
+    require 'digest/bubblebabble'
+
+    counter = 0
+    hash = nil
+    while (hash == nil || db.hasKey(hash))
+        return "" if (counter == 10)
+        hashes = (Digest::SHA256.bubblebabble Time.now.to_s + counter.to_s).split("-")
+        hash = hashes[rand(hashes.length - 1)]
+        counter += 1
+    end
+
+    return hash
+end
+
 get '/manage' do
+    @hash = getAHash(db)
     erb :manage
 end
 
@@ -47,6 +64,11 @@ get '/api/ls' do
 
     return JSON.generate(answer)
 end
+
+get '/api/hash' do 
+    getAHash(db)
+end
+
 
 
 get '/list' do

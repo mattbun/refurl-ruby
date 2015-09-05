@@ -21,6 +21,10 @@ class DB
         return @data[key]
     end
 
+    def hasKey(key)
+        return @data.has_key?(key)
+    end
+
     def print()
         puts @data
     end
