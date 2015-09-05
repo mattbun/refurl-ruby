@@ -17,10 +17,29 @@
                     multiFolder: false
                 },
                 function(file){
-                    console.log(file);
                     $("#path-field").val(file);
                 });
             });
+
+            function generateKey(){
+                $.ajax({url : 'api/hash'}).done(function(data){
+                    $('#key-field').val(data);
+                });
+            }
+
+            function createLink(){
+                var key = $("#key-field").val();
+
+                var payload = {
+                    "key" : key,
+                    "name" : $("#name-field").val(),
+                    "path" : $("#path-field").val()
+                }
+
+                $.post("api/add", payload, function(data){
+                    window.location.href = key;
+                });
+            }
 
             
 
@@ -48,33 +67,31 @@
               </div>
           </div>
 
-          <form action="manage/add" method="POST">
-              <div style="float:left">
-                  <label class="form-label"><h4>Browse</h4></label>
-                  <div style="width:350px; height:500px; overflow:scroll" class="well">
-                      <div id="filelist-container">
-                      </div>
+          <div style="float:left">
+              <label class="form-label"><h4>Browse</h4></label>
+              <div style="width:350px; height:500px; overflow:scroll" class="well">
+                  <div id="filelist-container">
                   </div>
-                  <input type="hidden" id="path-field" name="path" value="">
               </div>
-              <div style="float:right; width:350px">
-                  <label class="form-label"><h4>Name</h4></label>
-                  <input type="text" class="form-control" name="name">
-                  <br>
-                  <label class="form-label"><h4>Key</h4></label>
-                  <div class="input-group">
-                      <input id="hash-field" type="text" class="form-control" name="key" value="<%= @hash %>">
-                      <div class="input-group-btn">
-                          <button type="button" class="btn btn-primary" onclick="$.ajax({url : 'api/hash'}).done(function(data){$('#hash-field').val(data);});">
-                              <span class="glyphicon glyphicon-refresh"></span>
-                          </button>
-                      </div>
+              <input type="hidden" id="path-field" name="path" value="">
+          </div>
+          <div style="float:right; width:350px">
+              <label class="form-label"><h4>Name</h4></label>
+              <input id="name-field" type="text" class="form-control" name="name">
+              <br>
+              <label class="form-label"><h4>Key</h4></label>
+              <div class="input-group">
+                  <input id="key-field" type="text" class="form-control" name="key" value="<%= @hash %>">
+                  <div class="input-group-btn">
+                      <button type="button" class="btn btn-primary" onclick="generateKey()">
+                          <span class="glyphicon glyphicon-refresh"></span>
+                      </button>
                   </div>
-                  <br>
-                  <br>
-                  <input type="submit" class="btn btn-lg btn-block btn-primary" value="Create Link">
               </div>
-          </form>
+              <br>
+              <br>
+              <button class="btn btn-lg btn-block btn-primary" value="Create Link" onclick="createLink()">Create Link</button>
+          </div>
       </div>
   </body>
 </html>

@@ -34,11 +34,13 @@ get '/manage' do
     erb :manage
 end
 
-post '/manage/add' do
+post '/api/add' do
     fullpath = rootpath + params["path"]
     size = File.size(fullpath)
     size = Filesize.from("#{size} B").pretty
     db.add(params["key"], Record.new(params["key"], params["name"], fullpath, size))
+
+    return params["key"]
 end
 
 get '/:key/download' do |n|
