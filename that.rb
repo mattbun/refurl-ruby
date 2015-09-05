@@ -29,8 +29,24 @@ def getAHash(db)
     return hash
 end
 
-get '/manage' do
+get '/that-add' do
     @hash = getAHash(db)
+    erb :add
+end
+
+get '/that-manage' do
+    @tablebody = ""
+    keys = db.getKeys
+    keys.each do |key|
+        entry = db.get(key)
+        @tablebody += "<tr>\n"
+        @tablebody += "<td>" + entry.name.to_s + "</td>\n"
+        @tablebody += "<td><a href='" + key.to_s + "'>" + key.to_s + "</a></td>\n"
+        @tablebody += "<td>" + entry.path.to_s + "</td>\n"
+        @tablebody += "<td><button type='button' class='btn btn-xs btn-danger' onclick='deleteLink(\"" + key.to_s + "\")'>Delete</button></td>\n"
+        @tablebody += "</tr>\n"
+    end
+
     erb :manage
 end
 
@@ -71,7 +87,9 @@ get '/api/hash' do
     getAHash(db)
 end
 
-
+delete '/api/delete/:key' do |key|
+    db.delete(key)
+end
 
 get '/list' do
     path = params['path']
@@ -117,7 +135,7 @@ post '/jqueryfiletree-connector' do
     
     response = "<ul class=\"jqueryFileTree\" style=\"display: none;\">"
 
-    filelist.each{
+    filelist.each {
         |item|
         next if (item == "." || item == "..")
 

@@ -25,6 +25,14 @@ class DB
         return @data.has_key?(key)
     end
 
+    def getKeys()
+        return @data.keys
+    end
+
+    def delete(key)
+        return @data.delete(key)
+    end
+
     def print()
         puts @data
     end
