@@ -5,36 +5,37 @@ require 'yaml'
 require 'filesize'
 require 'json'
 require_relative 'db'
+require_relative 'config'
 
 db = DB.new
-rootpath = "/media"
+rootpath = ROOT_PATH.chomp("/")
 
 #get '/' do
 #    erb :index
 #end
 
-def getAHash(db)
-    # bubblebabble makes for some fun looking hashes
-    require 'digest/bubblebabble'
+helpers do
+  def protected!
+    return if authorized?
+    headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+    halt 401, "Not authorized\n"
+  end
 
-    counter = 0
-    hash = nil
-    while (hash == nil || db.hasKey(hash))
-        return "" if (counter == 10)
-        hashes = (Digest::SHA256.bubblebabble Time.now.to_s + counter.to_s).split("-")
-        hash = hashes[rand(hashes.length - 1)]
-        counter += 1
-    end
-
-    return hash
+  def authorized?
+    @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+    @auth.provided? and @auth.basic? and @auth.credentials and @auth.credentials == [AUTH_USER, AUTH_PASS]
+  end
 end
 
+
 get '/that-add' do
+    protected!
     @hash = getAHash(db)
     erb :add
 end
 
 get '/that-manage' do
+    protected!
     @tablebody = ""
     keys = db.getKeys
     keys.each do |key|
@@ -50,7 +51,9 @@ get '/that-manage' do
     erb :manage
 end
 
+# API
 post '/api/add' do
+    protected!
     fullpath = rootpath + params["path"]
     size = File.size(fullpath)
     size = Filesize.from("#{size} B").pretty
@@ -59,14 +62,8 @@ post '/api/add' do
     return params["key"]
 end
 
-get '/:key/download' do |n|
-    record = db.get(n)
-    filename = File.basename(record.path)
-    send_file record.path, :filename => filename, :type => 'Application/octet-stream'
-end
-
-
 get '/api/ls' do
+    protected!
     path = params['path']
     fullpath = rootpath
     if (path != nil)
@@ -84,40 +81,18 @@ get '/api/ls' do
 end
 
 get '/api/hash' do 
+    protected!
     getAHash(db)
 end
 
 delete '/api/delete/:key' do |key|
+    protected!
     db.delete(key)
-end
-
-get '/list' do
-    path = params['path']
-    fullpath = rootpath
-    if (path != nil)
-        fullpath += "/" + path
-    else 
-        path = ""
-    end
-
-    @path = path
-    erb :list
-end   
-
-get '/:key' do |n|
-    record = db.get(n)
-    if (!record) then
-        halt 404
-    end
-
-    @key = n
-    @name = record.name
-    @size = record.size
-    @path = record.path
-    erb :download
+    return 200
 end
 
 post '/jqueryfiletree-connector' do
+    protected!
     dir = params["dir"].to_s
 
     #TODO Check that dir is in our root
@@ -150,4 +125,38 @@ post '/jqueryfiletree-connector' do
     response += "</ul>"
     return response
 end
-        
+
+get '/:key/download' do |n|
+    record = db.get(n)
+    halt 404 if (!record)
+    filename = File.basename(record.path)
+    send_file record.path, :filename => filename, :type => 'Application/octet-stream'
+end
+
+get '/:key' do |n|
+    record = db.get(n)
+    halt 404 if (!record)
+
+    @key = n
+    @name = record.name
+    @size = record.size
+    @path = record.path
+    erb :download
+end
+
+
+def getAHash(db)
+    # bubblebabble makes for some fun looking hashes
+    require 'digest/bubblebabble'
+
+    counter = 0
+    hash = nil
+    while (hash == nil || db.hasKey(hash))
+        return "" if (counter == 10)
+        hashes = (Digest::SHA256.bubblebabble Time.now.to_s + counter.to_s).split("-")
+        hash = hashes[rand(hashes.length - 1)]
+        counter += 1
+    end
+
+    return hash
+end
