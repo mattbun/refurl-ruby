@@ -9,6 +9,8 @@
         <script type="text/javascript" src="components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="components/bootstrap/dist/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="components/jqueryfiletree/dist/jQueryFileTree.min.js"></script>
+        <script type="text/javascript" src="components/jqueryfiletree/dist/jQueryFileTree.min.js"></script>
+        <script type="text/javascript" src="components/clipboard-button/clipboard-button.js"></script>
         <script>
 
             $(document).ready( function() {
@@ -37,7 +39,22 @@
                 }
 
                 $.post("api/add", payload, function(data){
-                    window.location.href = key;
+                    console.log(data);
+                    var result = JSON.parse(data);
+                    if (result.status == "ok"){
+                        window.location.href = result.key;
+                        //$("#error-message").hide();
+                        //$("#success-message").show();
+                        //$("#success-message").html("<a href='" + result.key + "'>" + result.url + "</a> <button class='btn btn-primary btn-sm' id='clipboard-button' data-clipboard-text='" + result.url + "'><span class='glyphicon glyphicon-paperclip'></span></button>");
+                        //$("#success-message").html("<a href='" + result.key + "'>" + result.url + "</a> <a class='btn btn-primary btn-sm' id='clipboard-button' data-clipboard-text='" + result.url + "'>(copy)</a>");
+                        //$("#success-message").html('<div class="input-group"> <div class="input-group-btn"> <a href="' + result.key + '" class="btn btn-primary">Go</a></div> <input type="text" class="form-control" value="' + result.url + '"> <div class="input-group-btn"><button id="clipboard-button" type="button" class="btn btn-primary"> <span class="glyphicon glyphicon-paperclip"></span> </button> </div> </div>');
+                        //clipboardButton("#clipboard-button");
+                    }
+                    else {
+                        $("#success-message").hide();
+                        $("#error-message").show();
+                        $("#error-message").text(result.error);
+                    }
                 });
             }
 
@@ -90,7 +107,11 @@
               </div>
               <br>
               <br>
-              <button class="btn btn-lg btn-block btn-primary" value="Create Link" onclick="createLink()">Create Link</button>
+              <button id="create-button" class="btn btn-lg btn-block btn-primary" value="Create Link" onclick="createLink()">Create Link</button>
+              <br>
+              <br>
+              <div style="color:red; text-align:center" id="error-message" hidden></div>
+              <div style="text-align:center" id="success-message" hidden></div>
           </div>
       </div>
   </body>

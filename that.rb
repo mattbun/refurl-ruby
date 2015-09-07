@@ -9,6 +9,7 @@ require_relative 'config'
 
 db = DB.new
 rootpath = ROOT_PATH.chomp("/")
+domain = DOMAIN.chomp("/")
 
 #get '/' do
 #    erb :index
@@ -54,12 +55,15 @@ end
 # API
 post '/api/add' do
     protected!
-    fullpath = rootpath + params["path"]
-    size = File.size(fullpath)
-    size = Filesize.from("#{size} B").pretty
-    db.add(params["key"], Record.new(params["key"], params["name"], fullpath, size))
+    error_message = db.add(rootpath, params["key"], params["name"], params["path"])
 
-    return params["key"]
+    if (error_message != nil)
+        result = {:status => "error", :key => params["key"], :error => error_message}
+    else
+        result = {:status => "ok", :key => params["key"], :url => domain + "/" + params["key"]}
+    end
+
+    return JSON.generate(result)
 end
 
 get '/api/ls' do

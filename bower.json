@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "bootstrap": "~3.3.5",
+    "clipboard-button": "~1.0.0",
     "jqueryfiletree": "~2.0.2"
   }
 }
