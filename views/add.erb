@@ -42,23 +42,36 @@
                     console.log(data);
                     var result = JSON.parse(data);
                     if (result.status == "ok"){
-                        window.location.href = result.key;
-                        //$("#error-message").hide();
-                        //$("#success-message").show();
-                        //$("#success-message").html("<a href='" + result.key + "'>" + result.url + "</a> <button class='btn btn-primary btn-sm' id='clipboard-button' data-clipboard-text='" + result.url + "'><span class='glyphicon glyphicon-paperclip'></span></button>");
-                        //$("#success-message").html("<a href='" + result.key + "'>" + result.url + "</a> <a class='btn btn-primary btn-sm' id='clipboard-button' data-clipboard-text='" + result.url + "'>(copy)</a>");
-                        //$("#success-message").html('<div class="input-group"> <div class="input-group-btn"> <a href="' + result.key + '" class="btn btn-primary">Go</a></div> <input type="text" class="form-control" value="' + result.url + '"> <div class="input-group-btn"><button id="clipboard-button" type="button" class="btn btn-primary"> <span class="glyphicon glyphicon-paperclip"></span> </button> </div> </div>');
-                        //clipboardButton("#clipboard-button");
+                        //window.location.href = result.key;
+                        $("#error-message").hide();
+                        $("#success-message").show();
+                        showURLBox(result.key, result.url);
+                        $("#error-message").text("");
                     }
                     else {
                         $("#success-message").hide();
                         $("#error-message").show();
                         $("#error-message").text(result.error);
+                        $("#success-message").html("");
                     }
                 });
             }
 
-            
+            function showURLBox(key, url){
+                var boxHTML = "";
+                boxHTML += '<div class="input-group">';
+                boxHTML += '    <div class="input-group-btn">';
+                boxHTML += '        <a href="' + key + '" class="btn btn-primary">Go</a>';
+                boxHTML += '    </div>';
+                boxHTML += '    <input type="text" class="form-control" value="' + url + '">';
+                boxHTML += '    <div class="input-group-btn">';
+                boxHTML += '        <button id="clipboard-button" type="button" class="btn btn-primary" data-clipboard-text="' + url + '">Copy</button>';
+                boxHTML += '    </div>';
+                boxHTML += '</div>';
+
+                $("#success-message").html(boxHTML);
+                clipboardButton("#clipboard-button");
+            }
 
         </script>
     </head>
