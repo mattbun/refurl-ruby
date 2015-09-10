@@ -4,14 +4,46 @@
         <script type="text/javascript" src="components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="components/bootstrap/dist/js/bootstrap.min.js"></script>
         <script>
+
+            $(getLinks);
+
             function deleteLink(key){
                 $.ajax({
                     url: '/api/delete/' + key,
                     type: 'DELETE',
                     success: function(result) {
-                        location.reload();
+                        getLinks();
                     }
                 });
+            }
+
+            function getLinks(){
+                $.ajax({
+                    url: "/api/list",
+                    type: "GET",
+                    success: function(data) {
+                        var tableHTML = "";
+                        var result = JSON.parse(data);
+                        $.each(result, function (index, value){
+                            tableHTML += getRecordHTML(value.key, value.name, value.path);
+                        });
+                        $("#linktable").html(tableHTML);
+                        
+                    }
+                });
+            }
+
+            function getRecordHTML(key, name, path){
+                var result = "";
+                
+                result += "<tr>\n";
+                result += "<td>" + name + "</td>\n";
+                result += "<td><a href='" + key + "'>" + key + "</a></td>\n";
+                result += "<td>" + path + "</td>\n";
+                result += "<td><button type='button' class='btn btn-xs btn-danger' onclick='deleteLink(\"" + key + "\")'>Delete</button></td>\n";
+                result += "</tr>\n";
+
+                return result;
             }
         </script>
     </head>
@@ -47,8 +79,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <%= @tablebody %>
+                <tbody id="linktable">
                 </tbody>
             </table>
         </div>

@@ -32,6 +32,7 @@ class DB
 
     def saveDB()
         File.open('./db.yaml', 'w') {|f| f.write @data.to_yaml }
+        return
     end
 
     def get(key)
@@ -48,12 +49,26 @@ class DB
 
     def delete(key)
         @data.delete(key)
-        saveDB();
+        saveDB()
+        return
     end
 
     def print()
         puts @data
+        return
     end
+
+    def to_json
+        result = []
+
+        @data.each do |key, value|
+            result.push({:key => key, :name => value.name, :path => value.path, :size => value.size})
+        end
+
+        return JSON.generate(result)
+    end
+
+
 
 end
 

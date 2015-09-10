@@ -11,9 +11,6 @@ db = DB.new
 rootpath = ROOT_PATH.chomp("/")
 domain = DOMAIN.chomp("/")
 
-#get '/' do
-#    erb :index
-#end
 
 helpers do
   def protected!
@@ -29,6 +26,10 @@ helpers do
 end
 
 
+get '/' do
+    return 404
+end
+
 get '/that-add' do
     protected!
     @hash = getAHash(db)
@@ -37,18 +38,6 @@ end
 
 get '/that-manage' do
     protected!
-    @tablebody = ""
-    keys = db.getKeys
-    keys.each do |key|
-        entry = db.get(key)
-        @tablebody += "<tr>\n"
-        @tablebody += "<td>" + entry.name.to_s + "</td>\n"
-        @tablebody += "<td><a href='" + key.to_s + "'>" + key.to_s + "</a></td>\n"
-        @tablebody += "<td>" + entry.path.to_s + "</td>\n"
-        @tablebody += "<td><button type='button' class='btn btn-xs btn-danger' onclick='deleteLink(\"" + key.to_s + "\")'>Delete</button></td>\n"
-        @tablebody += "</tr>\n"
-    end
-
     erb :manage
 end
 
@@ -64,6 +53,11 @@ post '/api/add' do
     end
 
     return JSON.generate(result)
+end
+
+get '/api/list' do
+    protected!
+    db.to_json
 end
 
 get '/api/ls' do
@@ -99,9 +93,6 @@ post '/jqueryfiletree-connector' do
     protected!
     dir = params["dir"].to_s
 
-    #TODO Check that dir is in our root
-    #
-
     fullpath = rootpath
     if (dir != nil)
         fullpath += dir
@@ -129,6 +120,7 @@ post '/jqueryfiletree-connector' do
     response += "</ul>"
     return response
 end
+
 
 get '/:key/download' do |n|
     record = db.get(n)
