@@ -30,19 +30,19 @@ get '/' do
     return 404
 end
 
-get '/that-add' do
+get '/that/create' do
     protected!
     @hash = getAHash(db)
-    erb :add
+    erb :create
 end
 
-get '/that-manage' do
+get '/that/manage' do
     protected!
     erb :manage
 end
 
 # API
-post '/api/add' do
+post '/that/api/create' do
     protected!
     error_message = db.add(rootpath, params["key"], params["name"], params["path"])
 
@@ -55,12 +55,12 @@ post '/api/add' do
     return JSON.generate(result)
 end
 
-get '/api/list' do
+get '/that/api/list' do
     protected!
     db.to_json
 end
 
-get '/api/ls' do
+get '/that/api/ls' do
     protected!
     path = params['path']
     fullpath = rootpath
@@ -78,18 +78,18 @@ get '/api/ls' do
     return JSON.generate(answer)
 end
 
-get '/api/hash' do 
+get '/that/api/hash' do 
     protected!
     getAHash(db)
 end
 
-delete '/api/delete/:key' do |key|
+delete '/that/api/delete/:key' do |key|
     protected!
     db.delete(key)
     return 200
 end
 
-post '/jqueryfiletree-connector' do
+post '/that/jqueryfiletree-connector' do
     protected!
     dir = params["dir"].to_s
 
