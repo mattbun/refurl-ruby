@@ -60,23 +60,23 @@ get '/that/api/list' do
     db.to_json
 end
 
-get '/that/api/ls' do
-    protected!
-    path = params['path']
-    fullpath = rootpath
-    if (path != nil)
-        fullpath += path
-    end
-
-    isDir = File.directory?(fullpath)
-    answer = {:success => true, :isdir => isDir, :path => path}
-
-    if (isDir)
-        answer[:listing] = Dir.entries(fullpath).sort
-    end
-
-    return JSON.generate(answer)
-end
+#get '/that/api/ls' do
+#    protected!
+#    path = params['path']
+#    fullpath = rootpath
+#    if (path != nil)
+#        fullpath += path
+#    end
+#
+#    isDir = File.directory?(fullpath)
+#    answer = {:success => true, :isdir => isDir, :path => path}
+#
+#    if (isDir)
+#        answer[:listing] = Dir.entries(fullpath).sort
+#    end
+#
+#    return JSON.generate(answer)
+#end
 
 get '/that/api/hash' do 
     protected!
@@ -97,6 +97,8 @@ post '/that/jqueryfiletree-connector' do
     if (dir != nil)
         fullpath += dir
     end
+
+    return 400 unless (File.expand_path(fullpath).start_with?(File.expand_path(rootpath)))
 
     filelist = []
     if (File.directory?(fullpath))
