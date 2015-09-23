@@ -1,0 +1,27 @@
+{
+  "name": "clipboard-button",
+  "version": "1.0.0",
+  "main": "clipboard-button.js",
+  "description": "Copy text to clipboard by clicking a button, using only vanilla javascript without Flash.",
+  "ignore": [
+    "demo",
+    "test",
+    ".gitignore",
+    "bower.json",
+    "karma.conf.js",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
+  "homepage": "https://github.com/omichelsen/clipboard-button",
+  "_release": "1.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.0",
+    "commit": "7c3a2ffede4c6dad2b236063d7864cb6dce589ec"
+  },
+  "_source": "git://github.com/omichelsen/clipboard-button.git",
+  "_target": "~1.0.0",
+  "_originalSource": "clipboard-button",
+  "_direct": true
+}

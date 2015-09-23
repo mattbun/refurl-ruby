@@ -1,0 +1,56 @@
+{
+  "name": "jqueryfiletree",
+  "title": "jQueryFileTree",
+  "description": "jQueryFileTree is a configurable, AJAX file browser plugin for jQuery.",
+  "homepage": "https://github.com/jqueryfiletree/jqueryfiletree",
+  "version": "2.0.2",
+  "main": [
+    "dist/jQueryFileTree.min.css",
+    "dist/jQueryFileTree.min.js"
+  ],
+  "dependencies": {
+    "jquery": ">=1.9.1"
+  },
+  "moduleType": [
+    "globals"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jqueryfiletree/jqueryfiletree.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src",
+    "tests",
+    "*.md",
+    "gulpfile.js"
+  ],
+  "keywords": [
+    "jquery",
+    "file-tree",
+    "filetree",
+    "browser"
+  ],
+  "license": [
+    "MIT",
+    "GNU General Public"
+  ],
+  "authors": [
+    "Cory LaViska <@claviska>"
+  ],
+  "contributors": [
+    "Dave Rogers <@daveindigital>"
+  ],
+  "_release": "2.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.0.2",
+    "commit": "f4af50ffdb57fa5fd46ccba27fd952bd2015bdb6"
+  },
+  "_source": "git://github.com/jqueryfiletree/jqueryfiletree.git",
+  "_target": "~2.0.2",
+  "_originalSource": "jqueryfiletree",
+  "_direct": true
+}
