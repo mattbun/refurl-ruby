@@ -11,5 +11,4 @@ A screenshot:
 ![download screenshot](https://raw.githubusercontent.com/qiquen/that/master/screenshots/screenshot_download.png)
 
 ##Getting Started##
-Run `bower install` to install javascript dependencies.
 Start it by running `./that.rb -o 0.0.0.0`
