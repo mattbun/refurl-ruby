@@ -137,7 +137,7 @@ get '/:key' do |n|
 
     @key = n
     @name = record.name
-    @size = record.size
+	@size = Filesize.from("#{File.size(record.path)} B").pretty
     @path = record.path
     erb :download
 end

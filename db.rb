@@ -21,9 +21,7 @@ class DB
         return "Path is a directory" if (!File.file?(fullpath))
         return "Path is not in root directory" unless (File.expand_path(fullpath).start_with?(File.expand_path(rootpath)))
 
-        size = Filesize.from("#{File.size(fullpath)} B").pretty
-    
-        record = Record.new(key, name, fullpath, size)
+        record = Record.new(key, name, fullpath)
 
         @data[key] = record
         saveDB()
@@ -63,7 +61,7 @@ class DB
         result = []
 
         @data.each do |key, value|
-            result.push({:key => key, :name => value.name, :path => value.path, :size => value.size})
+            result.push({:key => key, :name => value.name, :path => value.path})
         end
 
         return JSON.generate(result)
@@ -76,13 +74,11 @@ end
 class Record
     attr_reader :name
     attr_reader :path
-    attr_reader :size
 
-    def initialize(key, name, path, size)
+    def initialize(key, name, path)
         @key = key
         @name = name
         @path = path
-        @size = size
     end
 
 end
