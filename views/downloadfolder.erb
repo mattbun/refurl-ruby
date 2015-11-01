@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+	<head>
+        <link rel="stylesheet" href="../components/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../components/jqueryfiletree/dist/jQueryFileTree.min.css">
+        <script type="text/javascript" src="../components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="../components/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../components/jqueryfiletree/dist/jQueryFileTree.min.js"></script>
+		
+		<script>
+            $(document).ready( function() {
+                $("#filelist-container").fileTree({
+                    script: 'that/jqueryfiletree-connector',
+					multiFolder: false,
+					root: '<%= @path %>'
+                },
+                function(file){
+					$("#path-field").val(file);
+					var button = $("#download-button");
+					var subpath = file.replace("<%= @path %>", "");
+					button.attr("href", "<%= @key %>/download?subpath=" + subpath);
+					button.removeClass("disabled");
+					button.text("Download");
+                });
+			});
+		</script>
+
+	</head>
+
+
+	<body style="padding-top:100px; text-align: center;">
+		<div style="width:400px; display:inline-block" class="container">
+			<h2 style="text-align:center"><%= @name %></h2>
+			<div style="height:500px; overflow:scroll; text-align: left;" class="well">
+				<div id="filelist-container">
+				</div>
+			</div>
+			<input type="hidden" id="path-field" name="path" value="">
+			<a id="download-button" class="button btn btn-lg btn-primary btn-block disabled" href="<%=@key%>/download">Select a file...</a>
+		</div>
+	</body>
+</html>
+

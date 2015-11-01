@@ -4,6 +4,7 @@ require 'sinatra'
 require 'yaml'
 require 'filesize'
 require 'json'
+require 'uri'
 require_relative 'db'
 require_relative 'config'
 
@@ -91,7 +92,7 @@ end
 
 post '/that/jqueryfiletree-connector' do
     protected!
-    dir = params["dir"].to_s
+    dir = URI.unescape(params["dir"].to_s)
 
     fullpath = rootpath
     if (dir != nil)
@@ -109,7 +110,7 @@ post '/that/jqueryfiletree-connector' do
 
     filelist.each {
         |item|
-        next if (item == "." || item == "..")
+        next if (item == "." || item == ".." || item == ".AppleDouble")
 
         if (File.directory?(fullpath + "/" + item))
             response += "<li class=\"directory collapsed\"><a href=\"#\" rel=\"#{dir + item}/\">#{item}</a></li>";
@@ -127,8 +128,16 @@ end
 get '/:key/download' do |n|
     record = db.get(n)
     halt 404 if (!record)
-    filename = File.basename(record.path)
-    send_file record.path, :filename => filename, :type => 'Application/octet-stream'
+	if (!File.file?(record.path))
+		subpath = params["subpath"]
+		halt 404 if (!subpath)
+		fullpath = record.path + subpath
+		filename = File.basename(fullpath)
+		send_file fullpath, :filename => filename, :type => 'Application/octet-stream'
+	else
+		filename = File.basename(record.path)
+		send_file record.path, :filename => filename, :type => 'Application/octet-stream'
+	end
 end
 
 get '/:key' do |n|
@@ -138,8 +147,13 @@ get '/:key' do |n|
     @key = n
     @name = record.name
 	@size = Filesize.from("#{File.size(record.path)} B").pretty
-    @path = record.path
-    erb :download
+	@path = record.path.sub(rootpath, "")
+
+	if (!File.file?(record.path))
+		erb :downloadfolder
+	else
+		erb :download
+	end
 end
 
 
