@@ -18,7 +18,6 @@ class DB
         fullpath = rootpath + path
         return "Path is too long" if (fullpath.length > 4096) #http://unix.stackexchange.com/questions/32795
         return "File does not exist" if (!File.exist?(fullpath))
-        return "Path is a directory" if (!File.file?(fullpath))
         return "Path is not in root directory" unless (File.expand_path(fullpath).start_with?(File.expand_path(rootpath)))
 
         record = Record.new(key, name, fullpath)

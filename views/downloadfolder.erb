@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="../components/jqueryfiletree/dist/jQueryFileTree.min.css">
         <script type="text/javascript" src="../components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="../components/bootstrap/dist/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="../components/jqueryfiletree/dist/jQueryFileTree.min.js"></script>
+		<script type="text/javascript" src="../components/jqueryfiletree/dist/jQueryFileTree.js"></script>
 		
 		<script>
             $(document).ready( function() {
@@ -14,13 +14,21 @@
 					multiFolder: false,
 					root: '<%= @path %>'
                 },
-                function(file){
+				function(file){
 					$("#path-field").val(file);
 					var button = $("#download-button");
-					var subpath = file.replace("<%= @path %>", "");
-					button.attr("href", "<%= @key %>/download?subpath=" + subpath);
-					button.removeClass("disabled");
-					button.text("Download");
+					if (file){
+						var subpath = file.replace("<%= @path %>", "");
+						button.attr("href", "<%= @key %>/download?subpath=" + subpath);
+						button.removeClass("disabled");
+						button.text("Download");
+					}
+					else {
+						button.attr("href", "#");
+						button.addClass("disabled");
+						button.text("Select a file...");
+					}
+
                 });
 			});
 		</script>

@@ -7,14 +7,15 @@
         <link rel="stylesheet" href="../components/jqueryfiletree/dist/jQueryFileTree.min.css">
         <script type="text/javascript" src="../components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="../components/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="../components/jqueryfiletree/dist/jQueryFileTree.min.js"></script>
+        <script type="text/javascript" src="../components/jqueryfiletree/dist/jQueryFileTree.js"></script>
         <script type="text/javascript" src="../components/clipboard-button/clipboard-button.js"></script>
         <script>
 
             $(document).ready( function() {
                 $("#filelist-container").fileTree({
                     script: 'jqueryfiletree-connector',
-                    multiFolder: false
+					multiFolder: false,
+					selectFolders: true
                 },
                 function(file){
                     $("#path-field").val(file);
