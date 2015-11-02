@@ -133,6 +133,7 @@ get '/:key/download' do |n|
 		halt 404 if (!subpath)
 		fullpath = record.path + subpath
 		filename = File.basename(fullpath)
+		return 400 unless (File.expand_path(fullpath).start_with?(File.expand_path(rootpath)))
 		send_file fullpath, :filename => filename, :type => 'Application/octet-stream'
 	else
 		filename = File.basename(record.path)
