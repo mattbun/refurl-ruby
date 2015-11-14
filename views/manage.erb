@@ -26,7 +26,7 @@
                         var tableHTML = "";
                         var result = JSON.parse(data);
                         $.each(result, function (index, value){
-                            tableHTML += getRecordHTML(value.key, value.name, value.path);
+                            tableHTML += getRecordHTML(value.key, value.name, value.path, value.visits);
                         });
                         $("#linktable").html(tableHTML);
                         
@@ -34,13 +34,16 @@
                 });
             }
 
-            function getRecordHTML(key, name, path){
-                var result = "";
+            function getRecordHTML(key, name, path, visits){
+				var result = "";
+
+				if (visits === null) visits = 0;
                 
                 result += "<tr>\n";
                 result += "<td>" + name + "</td>\n";
                 result += "<td><a href='../" + key + "'>" + key + "</a></td>\n";
-                result += "<td>" + path + "</td>\n";
+				result += "<td>" + path + "</td>\n";
+				result += "<td style='text-align:center'>" + visits + "</td>\n";
                 result += "<td><button type='button' class='btn btn-xs btn-danger' onclick='deleteLink(\"" + key + "\")'>Delete</button></td>\n";
                 result += "</tr>\n";
 
@@ -76,7 +79,8 @@
                     <tr>
                         <th style="width:200px">Name</th>
                         <th style="width:100px">Key</th>
-                        <th>Path</th>
+						<th>Path</th>
+						<th>DLs</th>
                         <th></th>
                     </tr>
                 </thead>

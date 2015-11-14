@@ -60,24 +60,37 @@ class DB
         result = []
 
         @data.each do |key, value|
-            result.push({:key => key, :name => value.name, :path => value.path})
+            result.push({:key => key, :name => value.name, :path => value.path, :visits => value.visitCounter})
         end
 
         return JSON.generate(result)
     end
 
-
-
+	def increment(key)
+		@data[key].incrementVisitCounter()
+		saveDB()
+	end
 end
 
 class Record
+	attr_reader :key
     attr_reader :name
     attr_reader :path
+	attr_reader :visitCounter
 
     def initialize(key, name, path)
         @key = key
         @name = name
         @path = path
+		@visitCounter = 0
     end
+
+	def incrementVisitCounter
+		if (@visitCounter == nil)
+			@visitCounter = 1
+		else
+			@visitCounter += 1
+		end
+	end
 
 end

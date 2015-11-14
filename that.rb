@@ -128,17 +128,20 @@ end
 get '/:key/download' do |n|
     record = db.get(n)
     halt 404 if (!record)
+
+	db.increment(n)
 	if (!File.file?(record.path))
 		subpath = params["subpath"]
 		halt 404 if (!subpath)
 		fullpath = record.path + subpath
 		filename = File.basename(fullpath)
-		return 400 unless (File.expand_path(fullpath).start_with?(File.expand_path(rootpath)))
+		return 400 unless (File.expand_path(fullpath).start_with?(File.expand_path(record.path)))
 		send_file fullpath, :filename => filename, :type => 'Application/octet-stream'
 	else
 		filename = File.basename(record.path)
 		send_file record.path, :filename => filename, :type => 'Application/octet-stream'
 	end
+
 end
 
 get '/:key' do |n|
