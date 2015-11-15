@@ -45,7 +45,7 @@ end
 # API
 post '/that/api/create' do
     protected!
-    error_message = db.add(rootpath, params["key"], params["name"], params["path"])
+    error_message = db.add(rootpath, params["key"], params["name"], params["path"], params["expireDate"], params["expireVisits"])
 
     if (error_message != nil)
         result = {:status => "error", :key => params["key"], :error => error_message}
