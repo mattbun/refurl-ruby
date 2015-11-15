@@ -25,8 +25,8 @@
                     success: function(data) {
                         var tableHTML = "";
                         var result = JSON.parse(data);
-                        $.each(result, function (index, value){
-                            tableHTML += getRecordHTML(value.key, value.name, value.path, value.visits);
+                        $.each(result, function (index, record){
+                            tableHTML += getRecordHTML(record);
                         });
                         $("#linktable").html(tableHTML);
                         
@@ -34,17 +34,21 @@
                 });
             }
 
-            function getRecordHTML(key, name, path, visits){
+            function getRecordHTML(record){
 				var result = "";
 
-				if (visits === null) visits = 0;
+				if (record.visits === null) record.visits = 0;
+				if (record.expireVisits !== null) record.visits += "/" + record.expireVisits;
+				var expireDate = "";
+				if (record.expireDate !== null) expireDate = new Date(record.expireDate).toLocaleDateString();
                 
                 result += "<tr>\n";
-                result += "<td>" + name + "</td>\n";
-                result += "<td><a href='../" + key + "'>" + key + "</a></td>\n";
-				result += "<td>" + path + "</td>\n";
-				result += "<td style='text-align:center'>" + visits + "</td>\n";
-                result += "<td><button type='button' class='btn btn-xs btn-danger' onclick='deleteLink(\"" + key + "\")'>Delete</button></td>\n";
+                result += "<td>" + record.name + "</td>\n";
+                result += "<td><a href='../" + record.key + "'>" + record.key + "</a></td>\n";
+				result += "<td>" + record.path + "</td>\n";
+				result += "<td style='text-align:center'>" + expireDate + "</td>\n";
+				result += "<td style='text-align:center'>" + record.visits + "</td>\n";
+                result += "<td><button type='button' class='btn btn-xs btn-danger' onclick='deleteLink(\"" + record.key + "\")'>Delete</button></td>\n";
                 result += "</tr>\n";
 
                 return result;
@@ -54,7 +58,7 @@
 
     <body>
 
-        <div class="container" style="width:750px; height:100%">
+        <div class="container" style="width:900px; height:100%">
             <div class="navbar navbar-default">
                 <div class="navbar-header">
                     <a class="navbar-brand">that</a>
@@ -80,6 +84,7 @@
                         <th style="width:200px">Name</th>
                         <th style="width:100px">Key</th>
 						<th>Path</th>
+						<th style="width:130px">Valid Through</th>
 						<th>DLs</th>
                         <th></th>
                     </tr>
