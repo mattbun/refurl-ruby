@@ -8,6 +8,8 @@ require 'uri'
 require_relative 'db'
 require_relative 'config'
 
+VERSION = "1.0"
+
 db = DB.new
 rootpath = ROOT_PATH.chomp("/")
 domain = DOMAIN.chomp("/")
@@ -31,19 +33,19 @@ get '/' do
     return 404
 end
 
-get '/that/create' do
+get '/refurl/create' do
     protected!
     @hash = getAHash(db)
     erb :create
 end
 
-get '/that/manage' do
+get '/refurl/manage' do
     protected!
     erb :manage
 end
 
 # API
-post '/that/api/create' do
+post '/refurl/api/create' do
     protected!
     error_message = db.add(rootpath, params["key"], params["name"], params["path"], params["expireDate"], params["expireVisits"])
 
@@ -56,12 +58,12 @@ post '/that/api/create' do
     return JSON.generate(result)
 end
 
-get '/that/api/list' do
+get '/refurl/api/list' do
     protected!
     db.to_json
 end
 
-#get '/that/api/ls' do
+#get '/refurl/api/ls' do
 #    protected!
 #    path = params['path']
 #    fullpath = rootpath
@@ -79,18 +81,18 @@ end
 #    return JSON.generate(answer)
 #end
 
-get '/that/api/hash' do 
+get '/refurl/api/hash' do 
     protected!
     getAHash(db)
 end
 
-delete '/that/api/delete/:key' do |key|
+delete '/refurl/api/delete/:key' do |key|
     protected!
     db.delete(key)
     return 200
 end
 
-post '/that/jqueryfiletree-connector' do
+post '/refurl/jqueryfiletree-connector' do
     protected!
     dir = URI.unescape(params["dir"].to_s)
 
