@@ -8,7 +8,7 @@ What if you could make cool links like that that point to your own files? If a f
 Well, that's what this program is. Still a work-in-progress. Not ready for public consumption and _definitely_ not ready to be exposed to the internet.
 
 A screenshot:
-![download screenshot](https://raw.githubusercontent.com/qiquen/that/master/screenshots/screenshot_download.png)
+![download screenshot](https://raw.githubusercontent.com/qiquen/that/master/screenshots/screenshot_downloadfile.png)
 
 ##Getting Started##
 Start it by running `./that.rb -o 0.0.0.0`
