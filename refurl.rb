@@ -112,7 +112,7 @@ post '/refurl/jqueryfiletree-connector' do
 
     filelist.each {
         |item|
-        next if (item == "." || item == ".." || item == ".AppleDouble")
+        next if (item == "." || item == ".." || item == ".AppleDouble" || item == ".DS_Store")
 
         if (File.directory?(fullpath + "/" + item))
             response += "<li class=\"directory collapsed\"><a href=\"#\" rel=\"#{dir + item}/\">#{item}</a></li>";
