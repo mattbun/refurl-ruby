@@ -63,24 +63,6 @@ get '/refurl/api/list' do
     db.to_json
 end
 
-#get '/refurl/api/ls' do
-#    protected!
-#    path = params['path']
-#    fullpath = rootpath
-#    if (path != nil)
-#        fullpath += path
-#    end
-#
-#    isDir = File.directory?(fullpath)
-#    answer = {:success => true, :isdir => isDir, :path => path}
-#
-#    if (isDir)
-#        answer[:listing] = Dir.entries(fullpath).sort
-#    end
-#
-#    return JSON.generate(answer)
-#end
-
 get '/refurl/api/hash' do 
     protected!
     getAHash(db)
@@ -91,6 +73,29 @@ delete '/refurl/api/delete/:key' do |key|
     db.delete(key)
     return 200
 end
+
+get '/refurl/api/filesize' do
+	key = params["key"]
+	subpath = params["subpath"]
+
+    record = db.get(key)
+    halt 404 if (!record)
+
+	size = -1;
+
+	if (!File.file?(record.path))
+		subpath = params["subpath"]
+		halt 404 if (!subpath)
+		fullpath = record.path + subpath
+		return 400 unless (File.expand_path(fullpath).start_with?(File.expand_path(record.path)))
+		size = Filesize.from("#{File.size(fullpath)} B").pretty
+	else
+		size = Filesize.from("#{File.size(record.path)} B").pretty
+	end
+
+	return JSON.generate({:size=>size})
+end
+
 
 post '/refurl/jqueryfiletree-connector' do
     protected!
@@ -154,12 +159,9 @@ get '/:key' do |n|
     @name = record.name
 	@size = Filesize.from("#{File.size(record.path)} B").pretty
 	@path = record.path.sub(rootpath, "")
+	@isDir = !File.file?(record.path) ? "true" : "false"
 
-	if (!File.file?(record.path))
-		erb :downloadfolder
-	else
-		erb :download
-	end
+	erb :download
 end
 
 

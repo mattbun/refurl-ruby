@@ -1,21 +1,83 @@
 <!doctype html>
-
 <html>
 
     <head>
         <title>Download</title>
-        <meta name="viewport" content="width=device-width">
-        <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css">
-        <script type="text/javascript" src="components/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="../components/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../components/jqueryfiletree/dist/jQueryFileTree.min.css">
+        <script type="text/javascript" src="../components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="../components/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../components/jqueryfiletree/dist/jQueryFileTree.js"></script>
+        <script>
+
+			$(init);
+
+			function init(){
+				var key = "<%=@key%>";
+				var isDir = <%=@isDir%>;
+
+				if (isDir){
+					$("#filelist-container").show();
+					$("#download-button").addClass("disabled");
+					$("#download-button").attr("href", "#");
+					$("#button-text").text("Select a file...");
+					$("#size").text("");
+					
+
+					$("#filelist").fileTree({
+						script: 'refurl/jqueryfiletree-connector',
+						multiFolder: false,
+						root: '<%= @path %>'
+					},
+					function(file){
+						var button = $("#download-button");
+						if (file){
+							var subpath = file.replace("<%= @path %>", "");
+							button.attr("href", "<%= @key %>/download?subpath=" + subpath);
+							button.removeClass("disabled");
+							$("#button-text").text("Download");
+							getSize("<%=@key%>", subpath);
+						}
+						else {
+							button.attr("href", "#");
+							button.addClass("disabled");
+							$("#button-text").text("Select a file...");
+							$("#size").text("");
+						}
+					});
+				}
+				else {
+					getSize(key, null);
+				}
+			}
+
+			function getSize(key, subpath){
+				var sizeurl = 'refurl/api/filesize?key=' + key;
+				if (subpath != null) sizeurl += '&subpath=' + subpath;
+
+                $.ajax({
+                    url: sizeurl,
+                    type: 'GET',
+					success: function(result) {
+						result = JSON.parse(result);
+						$("#size").text(" (" + result.size + ")");
+                    }
+                });
+			}
+
+        </script>
     </head>
 
-    <body style="padding-top:100px; background-color: #eee;">
-        <div style="width:350px" class="container">
-            <h2 style="text-align:center"><%= @name %></h2>
-            <h4 style="text-align:center"><%= @size %></h4>
-            <a class="button btn btn-lg btn-primary btn-block" href="<%=@key%>/download">Download</a>
+    <body style="padding-top:100px; background-color: #eee; text-align:center">
+        <div style="width:400px; display:inline-block" class="container">
+			<h2 style="text-align:center"><%= @name %></h2>
+			<br>
+			<div id="filelist-container" style="max-height:500px; overflow:scroll; text-align: left;" class="well" hidden>
+				<div id="filelist">
+				</div>
+			</div>
+			<a id="download-button" class="button btn btn-lg btn-primary btn-block" href="<%=@key%>/download"><span id="button-text">Download</span><span id="size"></span></a>
         </div>
-    </body>
+	</body>
 
 </html>
