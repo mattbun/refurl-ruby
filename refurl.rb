@@ -98,13 +98,21 @@ end
 
 
 post '/refurl/jqueryfiletree-connector' do
-    protected!
     dir = URI.unescape(params["dir"].to_s)
+	key = URI.unescape(params["key"].to_s)
 
     fullpath = rootpath
     if (dir != nil)
         fullpath += dir
     end
+
+	if (key != nil && key != "")
+		record = db.get(key);
+		return 400 unless (record != nil)
+		return 400 unless (File.expand_path(fullpath).start_with?(File.expand_path(record.path)))
+	else
+		protected!
+	end
 
     return 400 unless (File.expand_path(fullpath).start_with?(File.expand_path(rootpath)))
 

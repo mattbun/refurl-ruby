@@ -27,7 +27,8 @@
 					$("#filelist").fileTree({
 						script: 'refurl/jqueryfiletree-connector',
 						multiFolder: false,
-						root: '<%= @path %>'
+						root: '<%= @path %>',
+						key: '<%= @key %>'
 					},
 					function(file){
 						var button = $("#download-button");

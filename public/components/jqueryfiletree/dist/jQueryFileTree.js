@@ -31,7 +31,8 @@
         multiSelect: false,
         onlyFolders: false,
         onlyFiles: false,
-		selectFolders: false
+		selectFolders: false,
+		key: null
       };
       this.jqft = {
         container: $el
@@ -53,7 +54,8 @@
         dir: dir,
         onlyFolders: options.onlyFolders,
         onlyFiles: options.onlyFiles,
-        multiSelect: options.multiSelect
+        multiSelect: options.multiSelect,
+		key: options.key
       };
       handleResult = function(result) {
         var li;
